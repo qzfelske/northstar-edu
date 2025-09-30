@@ -46,62 +46,67 @@ driversFunc drivers = DoNotUse_getDrivers;
 
 namespace launcher_control
 {
+/* Flywheel task 1:
+STEP 1: CREATE A FLYWHEEL SUBSYSTEM
+make a flywheel subsystem object using constants from flywheel_constants.hpp
+for motor ids and can bus.
+*/
 // flywheel subsystem
-FlywheelSubsystem flywheel(drivers(), LEFT_MOTOR_ID, RIGHT_MOTOR_ID, CAN_BUS);
 
+// STEP 2: CREATE FLYWHEELRUNCOMMAND
 // flywheel commands
-FlywheelRunCommand flywheelRunCommand(&flywheel);
 
+/* STEP 3: MAKE COMMAND MAPPING
+Commands can be triggered by remote map states. These are things like a keybind
+or a switch on the remote. A very common mapping is the toggle command mapping.
+This takes in a drivers pointer, a vector of pointers to commands to be run and a RemoteMapState.
+Example of a remote map state for pressing f:
+RemoteMapState(RemoteMapState({tap::communication::serial::Remote::Key::F}))
+and for left switch up:
+RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+
+Make a ToggleCommandMapping for pressing f and one for fliping the left remote switch up. These
+should run the flywheel run command.
+
+
+*/
 // flywheel mappings
-ToggleCommandMapping fPressedFlywheels(
-    drivers(),
-    {&flywheelRunCommand},
-    RemoteMapState(RemoteMapState({tap::communication::serial::Remote::Key::F})));
 
-ToggleCommandMapping leftSwitchUpFlywheels(
-    drivers(),
-    {&flywheelRunCommand},
-    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// AGITATOR WORK HERE
 
-// agitator subsystem
-VelocityAgitatorSubsystem agitator(
-    drivers(),
-    constants::AGITATOR_PID_CONFIG,
-    constants::AGITATOR_CONFIG);
+// agitator subsystem HERE
 
-// agitator commands
-ConstantVelocityAgitatorCommand rotateAgitator(agitator, constants::AGITATOR_ROTATE_CONFIG);
+// agitator commands (ConstantVelocityAgitatorCommand and UnjamSpokeAgitatorCommand with agitator
+// configs in constants)
 
-UnjamSpokeAgitatorCommand unjamAgitator(agitator, constants::AGITATOR_UNJAM_CONFIG);
+// make a MoveUnjamIntegralComprisedCommand which takes in both previous commands
 
-MoveUnjamIntegralComprisedCommand rotateAndUnjamAgitator(
-    *drivers(),
-    agitator,
-    rotateAgitator,
-    unjamAgitator);
+// Below are mappings for the commands, uncomment and finish them
 
-HoldRepeatCommandMapping leftMousePressedShoot(
-    drivers(),
-    {&rotateAndUnjamAgitator},
-    RemoteMapState(RemoteMapState::MouseButton::LEFT),
-    false);
+// HoldRepeatCommandMapping leftMousePressedShoot(
+//     drivers(),
+//     {&<comprised command here>},
+//     RemoteMapState(RemoteMapState::MouseButton::LEFT),
+//     false);
 
-HoldRepeatCommandMapping rightSwitchUpShoot(
-    drivers(),
-    {&rotateAndUnjamAgitator},
-    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),
-    false);
+// HoldRepeatCommandMapping rightSwitchUpShoot(
+//     drivers(),
+//     {&<comprised command here>},
+//     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),
+//     false);
 
 void initializeSubsystems(Drivers *drivers)
 {
-    flywheel.initialize();
-    agitator.initialize();
+    // FLYWHEEL STEP 4: INITIALIZE SUBSYSTEM
+
+    // Initialize agitator
 }
 
 void registerStandardSubsystems(Drivers *drivers)
 {
-    drivers->commandScheduler.registerSubsystem(&flywheel);
-    drivers->commandScheduler.registerSubsystem(&agitator);
+    // FLYWHEEL STEP 5: REGISTAR SUBSYSTEM
+
+    // Register agitator
 }
 
 void setDefaultStandardCommands(Drivers *drivers) {}
@@ -114,10 +119,10 @@ void startStandardCommands(Drivers *drivers)
 
 void registerStandardIoMappings(Drivers *drivers)
 {
-    drivers->commandMapper.addMap(&leftMousePressedShoot);
-    drivers->commandMapper.addMap(&leftSwitchUpFlywheels);
-    drivers->commandMapper.addMap(&fPressedFlywheels);
-    drivers->commandMapper.addMap(&rightSwitchUpShoot);
+    // FLYWHEEL STEP 6: ADD COMMAND MAPPINGS
+    // use drivers->commandMapper.addMap() passing in the pointer to the mapping.
+
+    // Add agitator mappings
 }
 
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
