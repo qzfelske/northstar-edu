@@ -59,6 +59,10 @@ After you are done with this step, you should repeat task 3 and 4 for the fly sk
 operator interface.
 */
 
+float getDrivetrainHorizontalTranslation() {}
+float getDrivetrainVerticalTranslation() {}
+float getDrivetrainRotationalTranslation() {}
+
 }  // namespace control
 
 }  // namespace src

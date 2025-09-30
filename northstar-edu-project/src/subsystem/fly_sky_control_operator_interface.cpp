@@ -23,6 +23,26 @@ For the translation methods here, dont worry about keyboard input. An example of
 would be remote.getChannel(FlySky::Channel::LEFT_HORIZONTAL)
 */
 
+float ControlOperatorInterface::getDrivetrainHorizontalTranslation()
+{
+    float horizontal = 0;
+    horizontal += remote.getChannel(FlySky::Channel::LEFT_HORIZONTAL);
+    return horizontal;
+}
+float ControlOperatorInterface::getDrivetrainVerticalTranslation()
+{
+    float vertical = 0;
+    vertical += remote.getChannel(FlySky::Channel::LEFT_VERTICAL);
+    return vertical;
+}
+float ControlOperatorInterface::getDrivetrainRotationalTranslation()
+{
+    float maxRotationSpeed = 3.14;  // rad / sec
+    float rotation = 0;
+    rotation += remote.getChannel(FlySky::Channel::RIGHT_HORIZONTAL);
+    return rotation * maxRotationSpeed;
+}
+
 }  // namespace control
 
 }  // namespace src

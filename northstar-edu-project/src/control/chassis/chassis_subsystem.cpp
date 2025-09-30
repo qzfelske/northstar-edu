@@ -63,15 +63,39 @@ namespace src::chassis
     initializer list, the body of the constructor is empty, which is perfectly normal.
 */
 
-//STEP 1-4 HERE
+// STEP 1-4 HERE
 
-
-void ChassisSubsystem::initialize()
+chassis_subsystem(tap::Drivers* drivers, const ChassisConfig& config)
+    : Subsystem(drivers),
+      desiredOutput{},
+      pidControllers{
+          modm::Pid<float>(
+              VELOCITY_PID_KP,
+              VELOCITY_PID_KI,
+              VELOCITY_PID_KD,
+              VELOCITY_PID_MAX_ERROR_SUM,
+              VELOCITY_PID_MAX_OUTPUT),
+          modm::Pid<float>(
+              VELOCITY_PID_KP,
+              VELOCITY_PID_KI,
+              VELOCITY_PID_KD,
+              VELOCITY_PID_MAX_ERROR_SUM,
+              VELOCITY_PID_MAX_OUTPUT),
+          modm::Pid<float>(
+              VELOCITY_PID_KP,
+              VELOCITY_PID_KI,
+              VELOCITY_PID_KD,
+              VELOCITY_PID_MAX_ERROR_SUM,
+              VELOCITY_PID_MAX_OUTPUT),
+          modm::Pid<float>(
+              VELOCITY_PID_KP,
+              VELOCITY_PID_KI,
+              VELOCITY_PID_KD,
+              VELOCITY_PID_MAX_ERROR_SUM,
+              VELOCITY_PID_MAX_OUTPUT)},
+      motors
 {
-    for (auto& i : motors)
-    {
-        i.initialize();
-    }
+    Motor(drivers*, config.leftFrontID, config.CANbus, false, "LF"),
 }
 
 /* STEP 5: driveBasedOnHeading METHOD
@@ -107,7 +131,7 @@ void ChassisSubsystem::initialize()
    MotorId enum to determine what motor is what index. After you set all 4 indexes you are done, the
    motors will be told these values in the refresh method.
 */
-//STEP 5 HERE
+// STEP 5 HERE
 
 /*
    STEP 6: setVelocityFieldDrive METHOD
@@ -119,7 +143,7 @@ void ChassisSubsystem::initialize()
    driveBasedOnHeading with the all the values it needs.
 
 */
-//STEP 6 HERE
+// STEP 6 HERE
 
 /* STEP 7: REFRESH METHOD
 
@@ -148,7 +172,7 @@ void ChassisSubsystem::refresh()
             mpsToRpm(RAMP_UP_RPM_INCREMENT_MPS));
     }
 } Uncoment this block
-*/ 
+*/
 }  // namespace src::chassis
 
 #endif
